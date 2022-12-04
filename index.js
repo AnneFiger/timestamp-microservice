@@ -31,10 +31,10 @@ app.get("/api/hello", function (req, res) {
 // });
 
 app.get("/api/:date", function (req, res, next) {
-  req.params.date = new Date().toString()
+   date = new Date(req.params.date).toString()
   next();
 }, function(req,res) {
-  res.json({"unix":1451001600000, "utc": req.params.date}); 
+  res.json({"unix":1451001600000, "utc": date}); 
 });
 
 // listen for requests :)
