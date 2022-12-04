@@ -31,7 +31,7 @@ app.get("/api/hello", function (req, res) {
 // });
 
 app.get("/api/:date", function (req, res, next) {
-   date = new Date(req.params.date).toString()
+  date = new Date(req.params.date)
   next();
 }, function(req,res) {
   res.json({"unix":1451001600000, "utc": date}); 
