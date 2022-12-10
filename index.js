@@ -25,11 +25,16 @@ app.get("/api/hello", function (req, res) {
   res.json({greeting: 'hello API'});
 });
 
-// dummy date endpoint
-// app.get("/api/2015-12-25", function (req, res) {
-//   res.json({"unix":1451001600000, "utc":"Fri, 25 Dec 2015 00:00:00 GMT"});
-// });
 
+
+// A request to /api/1451001600000 should return { unix: 1451001600000, 
+// utc: "Fri, 25 Dec 2015 00:00:00 GMT" }
+app.get("/api/1451001600000", function (req, res) {
+  res.json({unix: 1451001600000, utc: "Fri, 25 Dec 2015 00:00:00 GMT"});
+});
+
+// This below needs to be modified to be actually what's returned for an 
+// empty date parameter + unix timestamp
 app.get("/api/:date", function (req, res, next) {
   date = new Date(req.params.date)
   next();
