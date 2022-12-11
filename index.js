@@ -36,11 +36,12 @@ app.get("/api/1451001600000", function (req, res) {
 // This below needs to be modified to be actually what's returned for an 
 // empty date parameter 
 app.get("/api/:date", function (req, res, next) {
-  date = new Date(req.params.date).toUTCString()
-  //unix = date[Symbol.toPrimitive]('number')
+  date = new Date(req.params.date)
+  dateAsUTCString = date.toUTCString()
+  unix = date[Symbol.toPrimitive]('number')
   next();
 }, function(req,res) {
-  res.json({"unix": unix, "utc": date}); 
+  res.json({"unix": unix, "utc": dateAsUTCString}); 
   // "unix":1451001600000
 });
 
