@@ -37,9 +37,11 @@ app.get("/api/1451001600000", function (req, res) {
 // empty date parameter + unix timestamp
 app.get("/api/:date", function (req, res, next) {
   date = new Date(req.params.date)
+  unix = date[Symbol.toPrimitive]('number')
   next();
 }, function(req,res) {
-  res.json({"unix":1451001600000, "utc": date}); 
+  res.json({"unix": unix, "utc": date}); 
+  // "unix":1451001600000
 });
 
 // listen for requests :)
