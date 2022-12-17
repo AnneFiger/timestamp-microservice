@@ -19,31 +19,35 @@ app.get("/", function (req, res) {
   res.sendFile(__dirname + '/views/index.html');
 });
 
-// A request to /api/1451001600000 should return { unix: 1451001600000, 
-// utc: "Fri, 25 Dec 2015 00:00:00 GMT" }
 
-// app.get("/api/1451001600000", function (req, res) {
-//   res.json({unix: 1451001600000, utc: "Fri, 25 Dec 2015 00:00:00 GMT"});
-// });
 
-// This below needs to be modified to be actually what's returned for an 
-// empty date parameter (separate function above this one?) - see what happens with an edge case ie request to 2015-02-31 -should return error
+// 2015-02-31 won't return error
 app.get("/api/:date?", function (req, res, next) {
-  // date = new Date(req.params.date)
-  unixtest = Date.parse(req.params.date)
-  if (isNaN(unixtest)===false) { //if unixtest is valid meaning the date given in the request is a valid date
-    date = new Date(req.params.date)
+  if(!req.params.date) {
+    date = new Date()
     dateAsUTCString = date.toUTCString()
     unix = date[Symbol.toPrimitive]('number')
   }else{
-    unix = req.params.date;
-    date = new Date(0);
-    date.setUTCMilliseconds(unix);
-    dateAsUTCString = date.toUTCString()
+    unixtest = Date.parse(req.params.date)
+    if (isNaN(unixtest)===false) { //if unixtest is valid meaning the date given in the request is a valid date
+      date = new Date(req.params.date) //Your project can handle dates that can be successfully parsed by new Date(date_string)?
+      dateAsUTCString = date.toUTCString()
+      unix = date[Symbol.toPrimitive]('number')
+    }else{
+      unix = req.params.date
+      //need clause here to check actual valid date format and return error -this only weeds out
+      //: ; characters etc that would make return an object with "null, invalid date"
+      if(isNaN(unix)){
+        return res.send({error : "Invalid Date"});
+      }
+      date = new Date(0);
+      date.setUTCMilliseconds(unix);
+      dateAsUTCString = date.toUTCString()
+    }
   }
   next();
 }, function(req,res) {
-  res.json({unix: unix, utc: dateAsUTCString}); 
+  res.json({unix: +unix, utc: dateAsUTCString}); //no space in between unix and utc. See at validation if a problem
 });
 
 // listen for requests :)
