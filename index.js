@@ -30,13 +30,12 @@ app.get("/api/:date?", function (req, res, next) {
   }else{
     unixtest = Date.parse(req.params.date)
     if (isNaN(unixtest)===false) { //if unixtest is valid meaning the date given in the request is a valid date
-      date = new Date(req.params.date) //Your project can handle dates that can be successfully parsed by new Date(date_string)?
+      date = new Date(req.params.date) //Your project can handle dates that can be successfully parsed by new Date(date_string)
       dateAsUTCString = date.toUTCString()
       unix = date[Symbol.toPrimitive]('number')
     }else{
       unix = req.params.date
-      //need clause here to check actual valid date format and return error -this only weeds out
-      //: ; characters etc that would make return an object with "null, invalid date"
+      //This only weeds out : ; characters etc that would make return an object with "null, invalid date"
       if(isNaN(unix)){
         return res.send({error : "Invalid Date"});
       }
@@ -47,7 +46,7 @@ app.get("/api/:date?", function (req, res, next) {
   }
   next();
 }, function(req,res) {
-  res.json({unix: +unix, utc: dateAsUTCString}); //no space in between unix and utc. See at validation if a problem
+  res.json({unix: +unix, utc: dateAsUTCString}); 
 });
 
 // listen for requests :)
